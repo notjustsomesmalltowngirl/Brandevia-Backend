@@ -1,5 +1,5 @@
 __pycache__/
 .venv/
 .idea/
-db.sqlite3
+backend/db.sqlite3
 media/attachments
