@@ -15,13 +15,13 @@ class SubscribeView(generics.CreateAPIView):
 
             def perform_create(self, serializer):
                 self.subscriber = serializer.save()
-                subject = "You've successfully subscribed to brandevia-frontend's mailing list!"
+                subject = "You've successfully subscribed to brandevia's mailing list!"
                 from_email = None  # uses DEFAULT_FROM_EMAIL
                 bcc = [self.subscriber.email]
                 html_content = render_to_string('email/welcome_email.html', {
                     'year': datetime.now().year,
                 })
-                text_content = "Thank you for subscribing to brandevia-frontend's mailing list."
+                text_content = "Thank you for subscribing to brandevia's mailing list."
                 email = EmailMultiAlternatives(
                     subject=subject,
                     body=text_content,
