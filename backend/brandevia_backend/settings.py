@@ -17,8 +17,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'peace.100daysofcode@gmail.com'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "peacedara0@gmail.com"
+EMAIL_HOST_PASSWORD = "dtcg tftq cwvs mjmb"  # not your regular password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
 CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 

@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from datetime import datetime
+
 class SubscribeView(generics.CreateAPIView):
             queryset = MailingListSubscriber.objects.all()
             serializer_class = MailingListSubscriberSerializer

@@ -11,7 +11,7 @@ class ContactMessageCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         message_instance = serializer.save()
 
-        subject = f"New Contact Message from {message_instance.full_name}"
+        subject = f"New Contact Message on Brandevia's website from {message_instance.full_name}"
         message = (
             f"Name: {message_instance.full_name}\n"
             f"Email: {message_instance.email}\n"

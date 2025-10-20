@@ -7,6 +7,7 @@ class MailingListSubscriber(models.Model):
     def __str__(self):
         return self.email
 
+
 class NewsLetter(models.Model):
     subject = models.CharField(max_length=255)
     message = models.TextField()  # plain text or HTML
