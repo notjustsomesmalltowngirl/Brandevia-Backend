@@ -17,6 +17,7 @@ class NewsLetter(models.Model):
         related_name='mails_bcced',
         blank=True
     )
+
     sent_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20,
