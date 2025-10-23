@@ -8,44 +8,77 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from datetime import datetime
+from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
 
 class SubscribeView(generics.CreateAPIView):
-            queryset = MailingListSubscriber.objects.all()
-            serializer_class = MailingListSubscriberSerializer
-            permission_classes = [AllowAny]
+        queryset = MailingListSubscriber.objects.all()
+        serializer_class = MailingListSubscriberSerializer
+        permission_classes = [AllowAny]
 
-            def perform_create(self, serializer):
-                self.subscriber = serializer.save()
-                subject = "You've successfully subscribed to brandevia's mailing list!"
-                from_email = None  # uses DEFAULT_FROM_EMAIL
-                bcc = [self.subscriber.email]
-                html_content = render_to_string('email/welcome_email.html', {
-                    'year': datetime.now().year,
-                })
-                text_content = "Thank you for subscribing to brandevia's mailing list."
-                email = EmailMultiAlternatives(
-                    subject=subject,
-                    body=text_content,
-                    from_email=from_email,
-                    to=None,
-                    bcc=bcc
-                )
-                email.attach_alternative(html_content, 'text/html')
-                email.send(fail_silently=False)
+        def perform_create(self, serializer):
+            self.subscriber = serializer.save()
+            subject = "You've successfully subscribed to Brandevia's mailing list!"
+            from_email = None  # uses DEFAULT_FROM_EMAIL
+            bcc = [self.subscriber.email]
+            html_content = render_to_string('email/welcome_email.html', {
+                'year': datetime.now().year,
+            })
+            text_content = "Thank you for subscribing to brandevia's mailing list."
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=text_content,
+                from_email=from_email,
+                to=None,
+                bcc=bcc
+            )
+            email.attach_alternative(html_content, 'text/html')
+            email.send(fail_silently=False)
 
-            def create(self, request, *args, **kwargs):
+        def create(self, request, *args, **kwargs):
+            try:
                 # run DRF's normal create process (this will call perform_create)
-                super().create(request, *args, **kwargs)
+                response = super().create(request, *args, **kwargs)
                 # now return a custom response
                 return Response(
                     {
                         "success": True,
-                        "message": f"{self.subscriber.email} subscribed successfully! 🎉",
+                        "message": f"Subscribed successfully!",
                         "subscriber": {
                             "email": self.subscriber.email,
                         },
                     },
                     status=status.HTTP_201_CREATED
+                )
+            except IntegrityError:
+                # e.g. duplicate email (unique constraint)
+                return Response(
+                    {
+                        "success": False,
+                        "message": "This email is already subscribed.",
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            except ValidationError as e:
+                # handle serializer validation errors
+                return Response(
+                    {
+                        "success": False,
+                        "message": "Invalid data provided.",
+                        "errors": e.detail,
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            except Exception as e:
+                # generic fallback
+                return Response(
+                    {
+                        "success": False,
+                        "message": f"An unexpected error occurred: {str(e)}",
+                    },
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
 
 
