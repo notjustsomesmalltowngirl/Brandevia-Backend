@@ -3,41 +3,41 @@ from .validators import phone_validator
 
 class ContactMessage(models.Model):
     QUOTE_CHOICES = [
-        ('erp', 'ERP Solutions'),
-        ('outsourcing', 'IT Outsourcing'),
-        ('managed', 'Managed IT Services'),
-        ('analytics', 'Data & Analytics'),
+        ('ERP Solutions', 'ERP Solutions'),
+        ('IT Outsourcing', 'IT Outsourcing'),
+        ('Managed IT Services', 'Managed IT Services'),
+        ('Data & Analytics', 'Data & Analytics'),
         ('general', 'General Enquiry'),
     ]
 
     SERVICE_CHOICES = [
         # ERP
-        ('implementation', 'New ERP Implementation'),
-        ('integration', 'ERP Integration with Existing Systems'),
-        ('customization', 'ERP Customization or Module Development'),
-        ('maintenance', 'ERP Maintenance / Support'),
-        ('migration', 'ERP Data Migration or Upgrade'),
+        ('New ERP Implementation', 'New ERP Implementation'),
+        ('ERP Integration with Existing Systems', 'ERP Integration with Existing Systems'),
+        ('ERP Customization or Module Development', 'ERP Customization or Module Development'),
+        ('ERP Maintenance / Support', 'ERP Maintenance / Support'),
+        ('ERP Data Migration or Upgrade', 'ERP Data Migration or Upgrade'),
 
         # Outsourcing
-        ('dedicated', 'Dedicated IT Team / Staff Augmentation'),
-        ('helpdesk', 'Helpdesk / Technical Support Setup'),
-        ('infrastructure', 'Infrastructure Management'),
-        ('full-outsource', 'Full IT Department Outsourcing'),
-        ('project', 'Short-term Project Outsourcing'),
+        ('Dedicated IT Team / Staff Augmentation', 'Dedicated IT Team / Staff Augmentation'),
+        ('Helpdesk / Technical Support Setup', 'Helpdesk / Technical Support Setup'),
+        ('Infrastructure Management', 'Infrastructure Management'),
+        ('Full IT Department Outsourcing', 'Full IT Department Outsourcing'),
+        ('Short-term Project Outsourcing', 'Short-term Project Outsourcing'),
 
         # Managed
-        ('network', 'Network Monitoring and Maintenance'),
-        ('server', 'Server Management'),
-        ('cloud', 'Cloud Infrastructure Management'),
-        ('security', 'Cybersecurity and Compliance'),
-        ('backup', 'Backup and Disaster Recovery'),
+        ('Network Monitoring and Maintenance', 'Network Monitoring and Maintenance'),
+        ('Server Management', 'Server Management'),
+        ('Cloud Infrastructure Management', 'Cloud Infrastructure Management'),
+        ('Cybersecurity and Compliance', 'Cybersecurity and Compliance'),
+        ('Backup and Disaster Recovery', 'Backup and Disaster Recovery'),
 
         # Analytics
-        ('dashboard', 'Business Intelligence Dashboard Setup'),
-        ('predictive', 'Predictive Analytics Model'),
-        ('ml', 'Machine Learning Integration'),
-        ('pipeline', 'Data Cleaning / Pipeline Setup'),
-        ('ai', 'AI Chatbot / Automation System'),
+        ('Business Intelligence Dashboard Setup', 'Business Intelligence Dashboard Setup'),
+        ('Predictive Analytics Model', 'Predictive Analytics Model'),
+        ('Machine Learning Integration', 'Machine Learning Integration'),
+        ('Data Cleaning / Pipeline Setup', 'Data Cleaning / Pipeline Setup'),
+        ('AI Chatbot / Automation System', 'AI Chatbot / Automation System'),
     ]
 
     TIMELINE_CHOICES = [
@@ -50,12 +50,24 @@ class ContactMessage(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20, validators=[phone_validator])
     company_name = models.CharField(max_length=150, blank=True, null=True)
-    get_a_quote = models.CharField(max_length=15, choices=QUOTE_CHOICES, default='general')
+    get_a_quote = models.CharField(max_length=20, choices=QUOTE_CHOICES, default='general')
+
     service = models.CharField(max_length=50, choices=SERVICE_CHOICES, default='General Enquiry')
+
     project_timeline = models.CharField(max_length=20, choices=TIMELINE_CHOICES)
     message = models.TextField()
     attachment = models.FileField(upload_to='attachments/', blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        default_service_map = {
+            'general': 'General Enquiry',
+        }
+
+        if not self.get_a_quote or self.get_a_quote == 'general':
+            self.service = default_service_map.get(self.get_a_quote)
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.full_name} ({self.email})"
