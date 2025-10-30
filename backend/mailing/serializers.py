@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import MailingListSubscriber, NewsLetter
 
 
-
 class MailingListSubscriberSerializer(serializers.ModelSerializer):
     class Meta:
         model = MailingListSubscriber
