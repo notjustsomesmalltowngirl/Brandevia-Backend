@@ -46,7 +46,7 @@ class SubscribeView(generics.CreateAPIView):
                         "message": f"Subscribed successfully!",
                         "subscriber": {
                             "email": self.subscriber.email,
-                        # },
+                        },
                     },
                     status=status.HTTP_201_CREATED
                 )
