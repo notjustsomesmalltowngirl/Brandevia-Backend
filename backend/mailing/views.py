@@ -6,6 +6,8 @@ from .models import MailingListSubscriber, NewsLetter
 from .serializers import MailingListSubscriberSerializer, NewsLetterSerializer
 from rest_framework.permissions import AllowAny, IsAdminUser
 from django.core.mail import EmailMultiAlternatives
+import threading
+import traceback
 from django.template.loader import render_to_string
 from datetime import datetime
 from rest_framework.exceptions import ValidationError
@@ -16,11 +18,19 @@ class SubscribeView(generics.CreateAPIView):
         serializer_class = MailingListSubscriberSerializer
         permission_classes = [AllowAny]
 
+        def send_email_async(self, email):
+            def _send():
+                try:
+                    email.send(fail_silently=False)
+                except Exception as e:
+                    print("❌ Email send failed:", e)
+                    traceback.print_exc()
+
+            threading.Thread(target=_send).start()
+
         def perform_create(self, serializer):
             self.subscriber = serializer.save()
             subject = "You've successfully subscribed to Brandevia's mailing list!"
-            from_email = None  # uses DEFAULT_FROM_EMAIL
-            bcc = [self.subscriber.email]
             html_content = render_to_string('email/welcome_email.html', {
                 'year': datetime.now().year,
             })
@@ -28,12 +38,14 @@ class SubscribeView(generics.CreateAPIView):
             email = EmailMultiAlternatives(
                 subject=subject,
                 body=text_content,
-                from_email=from_email,
+                from_email=None,
                 to=None,
-                bcc=bcc
+                bcc=[self.subscriber.email]
             )
             email.attach_alternative(html_content, 'text/html')
-            email.send(fail_silently=False)
+
+            # Send asynchronously to avoid long wait time / worker timeout
+            self.send_email_async(email)
 
         def create(self, request, *args, **kwargs):
             try:
