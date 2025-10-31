@@ -34,14 +34,7 @@ class SubscribeView(generics.CreateAPIView):
             # )
             # email.attach_alternative(html_content, 'text/html')
             # email.send(fail_silently=False)
-            return Response(
-                {
-                    "success": True,
-                    "message": f"Subscribed successfully!",
-                    # "subscriber": {
-                    #     "email": self.subscriber.email,
-                    # },
-                })
+
         def create(self, request, *args, **kwargs):
             try:
                 # run DRF's normal create process (this will call perform_create)
@@ -51,8 +44,8 @@ class SubscribeView(generics.CreateAPIView):
                     {
                         "success": True,
                         "message": f"Subscribed successfully!",
-                        # "subscriber": {
-                        #     "email": self.subscriber.email,
+                        "subscriber": {
+                            "email": self.subscriber.email,
                         # },
                     },
                     status=status.HTTP_201_CREATED
