@@ -24,7 +24,7 @@ class SubscribeView(generics.CreateAPIView):
             html_content = render_to_string('email/welcome_email.html', {
                 'year': datetime.now().year,
             })
-            text_content = "Thank you for subscribing to brandevia's mailing list."
+            text_content = "Thank you for subscribing to Brandevia's mailing list."
             email = EmailMultiAlternatives(
                 subject=subject,
                 body=text_content,
@@ -125,3 +125,9 @@ class MailCreateView(generics.CreateAPIView):
 
         response_serializer = self.get_serializer(news_letter)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
+# when I add new stuff to the database say I create a superuser does that go into the migration files? so I can log
+# in as an admin even after hosting? also, https://brandevia-api.onrender.com/api/v1/mailing/subscribe/ when I use
+# this to subscribe a new user, it gives me a 500 internal server error for new users but when I try again it gives
+# me the this user already exists error I coded in why is that? A part of my view adds to db but the other part sends
+# the mail so I'm thinking it like goes halfway and then breaks or something
