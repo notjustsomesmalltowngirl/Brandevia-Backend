@@ -6,8 +6,6 @@ from .models import MailingListSubscriber, NewsLetter
 from .serializers import MailingListSubscriberSerializer, NewsLetterSerializer
 from rest_framework.permissions import AllowAny, IsAdminUser
 from django.core.mail import EmailMultiAlternatives
-import threading
-import traceback
 from django.template.loader import render_to_string
 from datetime import datetime
 from rest_framework.exceptions import ValidationError
@@ -18,35 +16,32 @@ class SubscribeView(generics.CreateAPIView):
         serializer_class = MailingListSubscriberSerializer
         permission_classes = [AllowAny]
 
-        def send_email_async(self, email):
-            def _send():
-                try:
-                    email.send(fail_silently=False)
-                except Exception as e:
-                    print("❌ Email send failed:", e)
-                    traceback.print_exc()
-
-            threading.Thread(target=_send).start()
-
         def perform_create(self, serializer):
-            self.subscriber = serializer.save()
-            subject = "You've successfully subscribed to Brandevia's mailing list!"
-            html_content = render_to_string('email/welcome_email.html', {
-                'year': datetime.now().year,
-            })
-            text_content = "Thank you for subscribing to Brandevia's mailing list."
-            email = EmailMultiAlternatives(
-                subject=subject,
-                body=text_content,
-                from_email=None,
-                to=None,
-                bcc=[self.subscriber.email]
-            )
-            email.attach_alternative(html_content, 'text/html')
-
-            # Send asynchronously to avoid long wait time / worker timeout
-            self.send_email_async(email)
-
+            # self.subscriber = serializer.save()
+            # subject = "You've successfully subscribed to Brandevia's mailing list!"
+            # from_email = None  # uses DEFAULT_FROM_EMAIL
+            # bcc = [self.subscriber.email]
+            # html_content = render_to_string('email/welcome_email.html', {
+            #     'year': datetime.now().year,
+            # })
+            # text_content = "Thank you for subscribing to Brandevia's mailing list."
+            # email = EmailMultiAlternatives(
+            #     subject=subject,
+            #     body=text_content,
+            #     from_email=from_email,
+            #     to=None,
+            #     bcc=bcc
+            # )
+            # email.attach_alternative(html_content, 'text/html')
+            # email.send(fail_silently=False)
+            return Response(
+                {
+                    "success": True,
+                    "message": f"Subscribed successfully!",
+                    # "subscriber": {
+                    #     "email": self.subscriber.email,
+                    # },
+                })
         def create(self, request, *args, **kwargs):
             try:
                 # run DRF's normal create process (this will call perform_create)
@@ -56,9 +51,9 @@ class SubscribeView(generics.CreateAPIView):
                     {
                         "success": True,
                         "message": f"Subscribed successfully!",
-                        "subscriber": {
-                            "email": self.subscriber.email,
-                        },
+                        # "subscriber": {
+                        #     "email": self.subscriber.email,
+                        # },
                     },
                     status=status.HTTP_201_CREATED
                 )
