@@ -6,6 +6,8 @@ from .models import MailingListSubscriber, NewsLetter
 from .serializers import MailingListSubscriberSerializer, NewsLetterSerializer
 from rest_framework.permissions import AllowAny, IsAdminUser
 from django.core.mail import EmailMultiAlternatives
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
 from django.template.loader import render_to_string
 from datetime import datetime
 from rest_framework.exceptions import ValidationError
@@ -21,18 +23,17 @@ class SubscribeView(generics.CreateAPIView):
             subject = "You've successfully subscribed to Brandevia's mailing list!"
             from_email = None  # uses DEFAULT_FROM_EMAIL
             bcc = [self.subscriber.email]
-            # html_content = render_to_string('email/welcome_email.html', {
-            #     'year': datetime.now().year,
-            # })
+            html_content = render_to_string('email/welcome_email.html', {
+                'year': datetime.now().year,
+            })
             text_content = "Thank you for subscribing to Brandevia's mailing list."
             email = EmailMultiAlternatives(
                 subject=subject,
                 body=text_content,
                 from_email=from_email,
-                to=None,
-                bcc=bcc
+                to=['peace.100daysofcode@gmail.com'],
             )
-            # email.attach_alternative(html_content, 'text/html')
+            email.attach_alternative(html_content, 'text/html')
             email.send(fail_silently=False)
 
         def create(self, request, *args, **kwargs):
