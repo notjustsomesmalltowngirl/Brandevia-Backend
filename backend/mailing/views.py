@@ -18,22 +18,22 @@ class SubscribeView(generics.CreateAPIView):
 
         def perform_create(self, serializer):
             self.subscriber = serializer.save()
-            # subject = "You've successfully subscribed to Brandevia's mailing list!"
-            # from_email = None  # uses DEFAULT_FROM_EMAIL
-            # bcc = [self.subscriber.email]
+            subject = "You've successfully subscribed to Brandevia's mailing list!"
+            from_email = None  # uses DEFAULT_FROM_EMAIL
+            bcc = [self.subscriber.email]
             # html_content = render_to_string('email/welcome_email.html', {
             #     'year': datetime.now().year,
             # })
-            # text_content = "Thank you for subscribing to Brandevia's mailing list."
-            # email = EmailMultiAlternatives(
-            #     subject=subject,
-            #     body=text_content,
-            #     from_email=from_email,
-            #     to=None,
-            #     bcc=bcc
-            # )
+            text_content = "Thank you for subscribing to Brandevia's mailing list."
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=text_content,
+                from_email=from_email,
+                to=None,
+                bcc=bcc
+            )
             # email.attach_alternative(html_content, 'text/html')
-            # email.send(fail_silently=False)
+            email.send(fail_silently=False)
 
         def create(self, request, *args, **kwargs):
             try:
