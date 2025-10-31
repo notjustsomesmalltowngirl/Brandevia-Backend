@@ -17,7 +17,7 @@ class SubscribeView(generics.CreateAPIView):
         permission_classes = [AllowAny]
 
         def perform_create(self, serializer):
-            # self.subscriber = serializer.save()
+            self.subscriber = serializer.save()
             # subject = "You've successfully subscribed to Brandevia's mailing list!"
             # from_email = None  # uses DEFAULT_FROM_EMAIL
             # bcc = [self.subscriber.email]
