@@ -41,7 +41,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     os.getenv('FRONTEND_ALLOWED_DOMAIN'),
     os.getenv('VERCEL_FRONTEND_DOMAIN'),
-    "http://localhost:3000",   # if testing React locally
+    "http://localhost:5173",   # if testing React locally
 ]
 # Application definition
 
