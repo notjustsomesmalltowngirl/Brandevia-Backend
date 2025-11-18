@@ -22,7 +22,7 @@ class SubscribeView(generics.CreateAPIView):
             self.subscriber = serializer.save()
             subject = "You've successfully subscribed to Brandevia's mailing list!"
             from_email = None  # uses DEFAULT_FROM_EMAIL
-            bcc = [self.subscriber.email]
+            subscriber = [self.subscriber.email]
             html_content = render_to_string('email/welcome_email.html', {
                 'year': datetime.now().year,
             })
@@ -31,7 +31,7 @@ class SubscribeView(generics.CreateAPIView):
                 subject=subject,
                 body=text_content,
                 from_email=from_email,
-                to=['peace.100daysofcode@gmail.com'],
+                to=subscriber,
             )
             email.attach_alternative(html_content, 'text/html')
             email.send(fail_silently=False)
