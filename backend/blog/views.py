@@ -1,18 +1,12 @@
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework import generics, status
 from .serializers import BlogPostSerializer
-class ViewOneBlogPost(generics.RetrieveAPIView):
-    ...
+from .models import BlogPost
+from rest_framework.viewsets import ModelViewSet
+from .permissions import AdminOrReadOnly
 
-class ViewAllBlogPosts(generics.ListAPIView):
-    ...
-
-class UpdateBlogPosts(generics.UpdateAPIView):
-    ...
-
-class CreateBlogPosts(generics.CreateAPIView):
+class BlogPostViewSet(ModelViewSet):
+    queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [AdminOrReadOnly]
 
-class DeleteBlogPosts(generics.DestroyAPIView):
-    permission_classes = [IsAdminUser]
