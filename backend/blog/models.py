@@ -3,9 +3,9 @@ from django.utils.text import slugify
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-class BlogPost(models.Model):
+class BlogPost(models.Model):  #TODO: add time for when the blog should be published  i.e allow scheduled posting
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
     excerpt = models.TextField(blank=True)
     content = models.TextField()
     cover_image = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
@@ -14,6 +14,9 @@ class BlogPost(models.Model):
         User, on_delete=models.SET_NULL, null=True,
         blank=True, related_name='updated_blog_posts'
     )
+    # scheduled_publish_at = models.DateTimeField(null=True, blank=True)
+    # scheduled_delete_at = models.DateTimeField(null=True, blank=True)
+
     published = models.BooleanField(default=False)
     published_at = models.DateTimeField(null=True, blank=True)
 
