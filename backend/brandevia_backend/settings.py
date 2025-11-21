@@ -28,16 +28,24 @@ ALLOWED_HOSTS = [
 ]
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-# EMAIL_HOST = "smtp.gmail.com"
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
-DEFAULT_FROM_EMAIL = "peace.100daysofcode@gmail.com"
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+# # EMAIL_HOST = "smtp.gmail.com"
+# # EMAIL_PORT = 587
+# # EMAIL_USE_TLS = True
+# # EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+# # EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+# # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+# SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+# DEFAULT_FROM_EMAIL = "peace.100daysofcode@gmail.com"
+# SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "..."
+EMAIL_HOST_PASSWORD = "..."  # not your regular password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
