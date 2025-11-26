@@ -3,8 +3,28 @@ from django.utils.text import slugify
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
-class BlogPost(models.Model):  #TODO: add time for when the blog should be published  i.e allow scheduled posting
+
+# TODO: Add categories, tags and pen_name to BlogPost model
+class BlogPost(models.Model):  # TODO: add time for when the blog should be published  i.e allow scheduled posting
+    CATEGORY_CHOICES = [
+        ('enterprise_stack', 'Enterprise Stack'),
+        ('ops_automation', 'Ops & Automation'),
+        ('ai_intelligence', 'AI & Intelligence'),
+        ('security_trust', 'Security & Trust'),
+        ('digital_playbooks', 'Digital Playbooks'),
+        ('future_signals', 'Future Signals'),
+        ('inside_brandevia', 'Inside Brandevia'),
+    ]
     title = models.CharField(max_length=200)
+    category = models.CharField(
+        max_length=50,
+        choices=CATEGORY_CHOICES,
+        default='enterprise_stack'
+    )
+    tag = models.CharField(
+        max_length=50,
+        default='ERP'
+    )
     slug = models.SlugField(unique=True, blank=True, null=True)
     excerpt = models.TextField(blank=True)
     content = models.TextField()
