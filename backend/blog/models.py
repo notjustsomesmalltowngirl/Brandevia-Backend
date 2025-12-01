@@ -21,9 +21,8 @@ class BlogPost(models.Model):  # TODO: add time for when the blog should be publ
         choices=CATEGORY_CHOICES,
         default='enterprise_stack'
     )
-    tag = models.CharField(
-        max_length=50,
-        default='ERP'
+    tag = models.JSONField(
+        default=list
     )
     slug = models.SlugField(unique=True, blank=True, null=True)
     excerpt = models.TextField(blank=True)

@@ -60,11 +60,11 @@ class BlogPostSerializer(serializers.ModelSerializer):
     def validate(self, data):
         category = data.get('category')
         tag = data.get('tag')
-
-        if tag and tag not in CATEGORY_TAGS[category]:
-            raise serializers.ValidationError({
-                "tag": "Invalid tag for this category."
-            })
+        for t in tag:
+            if t and t not in CATEGORY_TAGS[category]:
+                raise serializers.ValidationError({
+                    "tag": "Invalid tag for this category."
+                })
         return data
 
     def get_created_at_formatted(self, obj):
