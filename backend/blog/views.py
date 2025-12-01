@@ -29,7 +29,7 @@ class BlogPostViewSet(ModelViewSet):
             raise ValidationError({"success": False, "message": str(e)})
 
     def update(self, request, *args, **kwargs):
-        try:
+        # try:
             partial = kwargs.pop('partial', False)
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -43,8 +43,8 @@ class BlogPostViewSet(ModelViewSet):
                 "data": serializer.data
             })
 
-        except Exception as e:
-            raise ValidationError({"success": False, "message": str(e)})
+        # except Exception as e:
+        #     raise ValidationError({"success": False, "message": str(e)})
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

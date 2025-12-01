@@ -57,14 +57,19 @@ class BlogPostSerializer(serializers.ModelSerializer):
 
         ]
         read_only_fields = ['author', 'updated_by', 'created_at', 'updated_at']
+
     def validate(self, data):
-        category = data.get('category')
-        tag = data.get('tag')
-        for t in tag:
-            if t and t not in CATEGORY_TAGS[category]:
-                raise serializers.ValidationError({
-                    "tag": "Invalid tag for this category."
-                })
+        category = data.get('category') or getattr(self.instance, 'category', None)
+
+        tag = data.get('tag') or getattr(self.instance, 'tag', [])
+
+        if category and category in CATEGORY_TAGS:
+            for t in tag:
+                if t not in CATEGORY_TAGS[category]:
+                    raise serializers.ValidationError({
+                        "tag": f"'{t}' is not a valid tag for category '{category}'."
+                    })
+
         return data
 
     def get_created_at_formatted(self, obj):
