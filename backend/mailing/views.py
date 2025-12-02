@@ -27,14 +27,14 @@ class SubscribeView(generics.CreateAPIView):
                 'year': datetime.now().year,
             })
             text_content = "Thank you for subscribing to Brandevia's mailing list."
-            email = EmailMultiAlternatives(
-                subject=subject,
-                body=text_content,
-                from_email=from_email,
-                to=subscriber,
-            )
-            email.attach_alternative(html_content, 'text/html')
-            email.send(fail_silently=False)
+            # email = EmailMultiAlternatives(
+            #     subject=subject,
+            #     body=text_content,
+            #     from_email=from_email,
+            #     to=subscriber,
+            # )
+            # email.attach_alternative(html_content, 'text/html')
+            # email.send(fail_silently=False)
 
         def create(self, request, *args, **kwargs):
             try:
@@ -99,24 +99,24 @@ class MailCreateView(generics.CreateAPIView):
 
         bcc = [s.email for s in subscribers]
 
-        try:
-            email = EmailMultiAlternatives(
-                subject=news_letter.subject,
-                body=news_letter.message,
-                from_email="peace.100daysofcode@gmail.com",  # or DEFAULT_FROM_EMAIL
-                to=admin_emails,  # empty so nobody’s in the "To:" field
-                bcc=bcc,  # everyone is hidden in BCC
-            )
-            email.attach_alternative(html_content, "text/html")
-            email.send(fail_silently=False)
-
-            news_letter.status = 'sent'
-            news_letter.sent_at = timezone.now()
-            news_letter.save(update_fields=['status', 'sent_at', 'updated_at'])
-        except Exception as e:
-            news_letter.status = 'failed'
-            news_letter.error_message = str(e)
-            news_letter.save(update_fields=['status', 'error_message', 'updated_at'])
+        # try:
+        #     email = EmailMultiAlternatives(
+        #         subject=news_letter.subject,
+        #         body=news_letter.message,
+        #         from_email="peace.100daysofcode@gmail.com",  # or DEFAULT_FROM_EMAIL
+        #         to=admin_emails,  # empty so nobody’s in the "To:" field
+        #         bcc=bcc,  # everyone is hidden in BCC
+        #     )
+        #     email.attach_alternative(html_content, "text/html")
+        #     email.send(fail_silently=False)
+        #
+        #     news_letter.status = 'sent'
+        #     news_letter.sent_at = timezone.now()
+        #     news_letter.save(update_fields=['status', 'sent_at', 'updated_at'])
+        # except Exception as e:
+        #     news_letter.status = 'failed'
+        #     news_letter.error_message = str(e)
+        #     news_letter.save(update_fields=['status', 'error_message', 'updated_at'])
         return news_letter
 
     def create(self, request, *args, **kwargs):
@@ -127,8 +127,4 @@ class MailCreateView(generics.CreateAPIView):
         response_serializer = self.get_serializer(news_letter)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
-# when I add new stuff to the database say I create a superuser does that go into the migration files? so I can log
-# in as an admin even after hosting? also, https://brandevia-api.onrender.com/api/v1/mailing/subscribe/ when I use
-# this to subscribe a new user, it gives me a 500 internal server error for new users but when I try again it gives
-# me the this user already exists error I coded in why is that? A part of my view adds to db but the other part sends
-# the mail so I'm thinking it like goes halfway and then breaks or something
+

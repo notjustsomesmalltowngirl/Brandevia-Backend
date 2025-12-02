@@ -27,10 +27,6 @@ CATEGORY_TAGS = {
 }
 
 class BlogPostSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='email'
-    )
     updated_by = serializers.SlugRelatedField(
         read_only=True,
         slug_field='email'
@@ -41,12 +37,11 @@ class BlogPostSerializer(serializers.ModelSerializer):
         model = BlogPost
         fields = [
                 "id",
-                "author",
                 "title",
                 "slug",
                 "excerpt",
                 "category",
-                "tag",
+                "tags",
                 "content",
                 "cover_image",
                 "created_at_formatted",
@@ -56,7 +51,7 @@ class BlogPostSerializer(serializers.ModelSerializer):
                 "published_at",
 
         ]
-        read_only_fields = ['author', 'updated_by', 'created_at', 'updated_at']
+        read_only_fields = ['updated_by', 'created_at', 'updated_at']
 
     def validate(self, data):
         category = data.get('category') or getattr(self.instance, 'category', None)

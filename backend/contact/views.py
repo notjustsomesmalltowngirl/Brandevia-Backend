@@ -26,26 +26,26 @@ class ContactMessageCreateView(generics.CreateAPIView):
             f"Message:\n{message_instance.message}\n"
         )
 
-        email = EmailMessage(
-            subject=subject,
-            body=message,
-            from_email=None,
-            to=['peace.100daysofcode@gmail.com'],
-        )
-
-        if message_instance.attachment:
-            attachment_path = message_instance.attachment.path
-            if os.path.exists(attachment_path):
-                email.attach_file(attachment_path)
-
-        email.send(fail_silently=False)
+        # email = EmailMessage(
+        #     subject=subject,
+        #     body=message,
+        #     from_email=None,
+        #     to=['peace.100daysofcode@gmail.com'],
+        # )
+        #
+        # if message_instance.attachment:
+        #     attachment_path = message_instance.attachment.path
+        #     if os.path.exists(attachment_path):
+        #         email.attach_file(attachment_path)
+        #
+        # email.send(fail_silently=False)
         return message_instance  # return the instance for use in `create()`
 
     def create(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            message_instance = self.perform_create(serializer)
+            self.perform_create(serializer)
 
             headers = self.get_success_headers(serializer.data)
             return Response(

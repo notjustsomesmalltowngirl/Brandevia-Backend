@@ -16,8 +16,7 @@ class BlogPostViewSet(ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
 
-            # Save with the author set to the logged-in user
-            serializer.save(author=request.user)
+            serializer.save()
 
             return Response({
                 "success": True,
@@ -29,7 +28,7 @@ class BlogPostViewSet(ModelViewSet):
             raise ValidationError({"success": False, "message": str(e)})
 
     def update(self, request, *args, **kwargs):
-        # try:
+        try:
             partial = kwargs.pop('partial', False)
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -43,8 +42,8 @@ class BlogPostViewSet(ModelViewSet):
                 "data": serializer.data
             })
 
-        # except Exception as e:
-        #     raise ValidationError({"success": False, "message": str(e)})
+        except Exception as e:
+            raise ValidationError({"success": False, "message": str(e)})
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

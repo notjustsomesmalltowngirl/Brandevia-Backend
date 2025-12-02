@@ -21,14 +21,14 @@ class BlogPost(models.Model):  # TODO: add time for when the blog should be publ
         choices=CATEGORY_CHOICES,
         default='enterprise_stack'
     )
-    tag = models.JSONField(
+    tags = models.JSONField(
         default=list
     )
     slug = models.SlugField(unique=True, blank=True, null=True)
     excerpt = models.TextField(blank=True)
     content = models.TextField()
     cover_image = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
+    # author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='blog_posts')
     updated_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True,
         blank=True, related_name='updated_blog_posts'
