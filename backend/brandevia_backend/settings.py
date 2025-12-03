@@ -53,6 +53,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     os.getenv('FRONTEND_ALLOWED_DOMAIN'),
     os.getenv('VERCEL_FRONTEND_DOMAIN'),
+    os.getenv('NETLIFY_FRONTEND_DOMAIN'),
     "http://localhost:5173",   # if testing React locally
 ]
 # Application definition
@@ -119,19 +120,19 @@ WSGI_APPLICATION = 'brandevia_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-# import dj_database_url
+#
 # DATABASES = {
-#     'default': dj_database_url.config(
-#         default=os.getenv("DATABASE_URL")
-#     )
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 # }
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL")
+    )
+}
 
 
 # Password validation
