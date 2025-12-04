@@ -23,7 +23,7 @@ class BlogPost(models.Model):  # TODO: add time for when the blog should be publ
     tags = models.JSONField(
         default=list
     )
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, max_length=200)
     excerpt = models.TextField(blank=True)
     content = models.TextField()
     cover_image = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
