@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import SubscribeView, MailCreateView
+from .views import SubscribeAPIView, MailCreateAPIView, UnSubscribeAPIView
 
 urlpatterns = [
-    path("subscribe/", SubscribeView.as_view(), name='subscribe'),
-    path('send-email/', MailCreateView.as_view(), name='send-email'),
+    path("subscribe/", SubscribeAPIView.as_view(), name='subscribe'),
+    path('send-email/', MailCreateAPIView.as_view(), name='send-email'),
+    path("unsubscribe/<str:email>/", UnSubscribeAPIView.as_view(), name="unsubscribe"),
 ]
 

@@ -13,7 +13,7 @@ from datetime import datetime
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
 
-class SubscribeView(generics.CreateAPIView):
+class SubscribeAPIView(generics.CreateAPIView):
         queryset = MailingListSubscriber.objects.all()
         serializer_class = MailingListSubscriberSerializer
         permission_classes = [AllowAny]
@@ -83,7 +83,7 @@ class SubscribeView(generics.CreateAPIView):
                 )
 
 
-class MailCreateView(generics.CreateAPIView):
+class MailCreateAPIView(generics.CreateAPIView):
     queryset = NewsLetter.objects.all()
     serializer_class = NewsLetterSerializer
     permission_classes = [IsAdminUser]
@@ -128,3 +128,26 @@ class MailCreateView(generics.CreateAPIView):
         return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 
+class UnSubscribeAPIView(generics.DestroyAPIView):
+    queryset = MailingListSubscriber.objects.all()
+    lookup_field = "email"
+    def get(self, request, *args, **kwargs):
+
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        email = kwargs.get("email")
+
+        try:
+            subscriber = MailingListSubscriber.objects.get(email=email)
+        except MailingListSubscriber.DoesNotExist:
+            return Response(
+                {"error": "This email is not subscribed."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        subscriber.delete()
+        return Response(
+            {"success": f"{email} has been unsubscribed successfully."},
+            status=status.HTTP_200_OK
+            )
