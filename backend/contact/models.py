@@ -7,7 +7,7 @@ class ContactMessage(models.Model):
         ('IT Outsourcing', 'IT Outsourcing'),
         ('Managed IT Services', 'Managed IT Services'),
         ('Data & Analytics', 'Data & Analytics'),
-        ('general', 'General Enquiry'),
+        ('General Enquiry', 'General Enquiry'),
     ]
 
     SERVICE_CHOICES = [
@@ -50,9 +50,9 @@ class ContactMessage(models.Model):
     email = models.EmailField()
     phone = models.CharField(max_length=20, validators=[phone_validator])
     company_name = models.CharField(max_length=150, blank=True, null=True)
-    get_a_quote = models.CharField(max_length=20, choices=QUOTE_CHOICES, default='general')
+    get_a_quote = models.CharField(max_length=20, choices=QUOTE_CHOICES, default='General Enquiry', blank=True, null=True)
 
-    service = models.CharField(max_length=50, choices=SERVICE_CHOICES, default='General Enquiry')
+    service = models.CharField(max_length=50, choices=SERVICE_CHOICES, default='General Enquiry', blank=True, null=True)
 
     project_timeline = models.CharField(max_length=20, choices=TIMELINE_CHOICES)
     message = models.TextField()
