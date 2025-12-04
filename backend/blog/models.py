@@ -17,7 +17,6 @@ class BlogPost(models.Model):  # TODO: add time for when the blog should be publ
     ]
     title = models.CharField(max_length=200)
     category = models.CharField(
-        max_length=50,
         choices=CATEGORY_CHOICES,
         default='enterprise_stack'
     )
